@@ -1,51 +1,57 @@
-'use client'
-import { useRef, useState } from 'react'
-import classes from './image-picker.module.css'
-import Image from 'next/image'
+'use client';
+import { useRef, useState } from 'react';
+import classes from './image-picker.module.css';
+import Image from 'next/image';
 
-export default function ImagePicker({ lable, name }) {
+export default function ImagePicker({ label, name }) {
+    const [pickedImage, setPickedImage] = useState();
+    const imageInput = useRef();
 
-    const [pickedImage, setPickedImage] = useState()
-
-    const imageInput = useRef()
-
-    function handleClick(){
-        imageInput.current.click()
+    function handleClick() {
+        imageInput.current.click();
     }
 
-    function handleImageChange(event){
-        const file = event.target.files[0]
+    function handleImageChange(event) {
+        const file = event.target.files[0];
 
-        if(!file){
-            setPickedImage(null)
-            return
+        if (!file) {
+            setPickedImage(null);
+            // setErrorMessage('');
+            return;
         }
 
-        const fileReader = new FileReader()
+        const fileReader = new FileReader();
         fileReader.onload = () => {
-            setPickedImage(fileReader.result)
-        }
-        fileReader.readAsDataURL(file)
+            setPickedImage(fileReader.result);
+            // setErrorMessage('');
+        };
+        fileReader.readAsDataURL(file);
     }
 
-    return <div className={classes.picker}>
-        <label htmlFor={name}>{lable}</label>
-        <div className={classes.controls}>
-            <div className={classes.preview}>
-                {!pickedImage && <p>No image picked yet.</p>}
-                {pickedImage && <Image src={pickedImage} alt='The image selected by the user' fill />}
+    return (
+        <div className={classes.picker}>
+            <label htmlFor={name}>{label}</label>
+            <div className={classes.controls}>
+                <div className={classes.preview}>
+                    {!pickedImage && <p>No image picked yet.</p>}
+                    {pickedImage && <Image src={pickedImage} alt='The image selected by the user' fill />}
+                </div>
+                <input
+                    className={classes.input}
+                    type='file'
+                    id={name}
+                    accept='image/png, image/jpeg'
+                    name={name}
+                    ref={imageInput}
+                    onChange={handleImageChange}
+                />
+                <button className={classes.button} type='button' onClick={handleClick}>
+                    Pick an Image
+                </button>
             </div>
-            <input
-                className={classes.input}
-                type='file'
-                id={name}
-                accept='image/png, image/jpeg'
-                name={name}
-                ref={imageInput}
-                onChange={handleImageChange}
-                required
-            />
-            <button className={classes.button} type='button' onClick={handleClick}>Pick an Image</button>
+            {/* {errorMessage && (
+                <p style={{color: 'red'}}>{errorMessage}</p>
+            )} */}
         </div>
-    </div>
+    );
 }

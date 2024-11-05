@@ -48,7 +48,7 @@ export default function ShareMealPage() {
                         ></textarea>
                     </p>
                     <ImagePicker lable='your image' name="image" />
-                    {state.message && <p>{state.message}</p>}
+                    {state.message && <p style={{color: 'red'}}>{state.message}</p>}
                     <p className={classes.actions}>
                         <MealsFormSubmit />
                     </p>
